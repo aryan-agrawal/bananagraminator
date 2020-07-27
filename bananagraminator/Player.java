@@ -98,7 +98,7 @@ public class Player {
         BananaBoard temp = new BananaBoard(_board);
         HashMap<String, Integer> letterCopy = new HashMap<>(_letters);
         _foundMove = null;
-        findMove(temp, letterCopy, _searchDepth, true, -INFINITY, INFINITY);
+        findMove(temp, letterCopy, _searchDepth, true);
         return _foundMove;
     }
 
@@ -113,7 +113,7 @@ public class Player {
      * board, as determined by heuristic().
      */
     private int findMove(BananaBoard board, HashMap<String, Integer> letters,
-                         int depth, boolean saveMove, int alpha, int beta) throws FileNotFoundException {
+                         int depth, boolean saveMove) throws FileNotFoundException {
         if (depth == 0) {
             return heuristic(board, letters, false);
         }
@@ -131,7 +131,7 @@ public class Player {
             String common = M.getSharedLetter();
             localLetterCopy.put(common, localLetterCopy.getOrDefault(common, 0) + 1);
             localCopy.addWord(M);
-            int score = findMove(localCopy, localLetterCopy, depth - 1, saveMove, alpha, beta);
+            int score = findMove(localCopy, localLetterCopy, depth - 1, saveMove);
             if (score == WIN_SCORE) {
                 bestScore = score;
                 bestMove = M;
@@ -145,10 +145,6 @@ public class Player {
             if (score > bestScore) {
                 bestScore = score;
                 bestMove = M;
-            }
-            alpha = Math.max(score, alpha);
-            if (alpha >= beta) {
-                break;
             }
         }
         if (saveMove) {
